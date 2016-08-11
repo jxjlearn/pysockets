@@ -9,7 +9,7 @@ serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #serversocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
 #mesage definition
-def msgMapping(connection):
+def msgMapping(msg):
 #message as input
 #mapping messages to differnt functions
     mapper = {
@@ -17,22 +17,7 @@ def msgMapping(connection):
         '[r]': changeReport,
         '[t]': msgEcho,  #testing
     }
-    msgStart = False
-    msg = ''
-    while True:
-        data = connection.recv(16)
-        print >>sys.stderr, "received '%s'" % data
-        if data:
-            if not msgStart:
-                msgStart = True
-                func = mapper.get(data[:3], noDefinition)
-            msg += data
-        else:
-            print msg
-            print func
-            func(connection, msg)
-            print >>sys.stderr, 'no more data from', client_address
-            break
+    return mapper.get(msg[:3], noDefinition)
 
 #function definitions
 def akquiltsync(msg):
@@ -83,7 +68,34 @@ while True:
     try:
         print >>sys.stderr, 'connection from', client_address
         #Recieve the data in small chunks and retransmit it
-        msgMapping(connection)
+        msgStart = False
+        msgEnd = False
+        msg = ''
+        endMark = '[]'
+
+        while True:
+            data = connection.recv(16)
+            print >>sys.stderr, "received '%s'" % data
+            if not msgEnd:
+                if not msgStart:
+                    msgStart = True
+                    func = msgMapping(data)
+                msg += data
+                if data.endswith(endMark):
+                    print msgEnd
+                    func(connection, msg)
+                    msgEnd = True
+                    print >>sys.stderr, 'end of message received from', client_address
+                    print >>sys.stderr, 'notify the client that message received'
+                    connection.sendall('<got it>')
+                    break
+#                connection.sendall(data)
+            else:
+                print msg
+                print func
+                func(connection, msg)
+                print >>sys.stderr, 'no more data from', client_address
+                break
     finally:
         #clean up the connection
         connection.close()
