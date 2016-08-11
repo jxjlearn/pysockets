@@ -1,12 +1,14 @@
 
 # coding: utf-8
 
-# In[6]:
+# In[7]:
 
 import socket
 import sys
 #create an NET, STREAMing(TCP/IP) socket
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#tells the kernel to reuse a local socket in TIME_WAIT state
+#serversocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
 #server address
 server_address = ('localhost', 6666)
@@ -33,6 +35,7 @@ while True:
             print >>sys.stderr, "received '%s'" % data
             if data:
                 print >>sys.stderr, 'sending data back to the client'
+                connection.sendall(data)
             else:
                 print >>sys.stderr, 'no more data from', client_address
                 break
