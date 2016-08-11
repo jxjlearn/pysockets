@@ -1,14 +1,22 @@
 
 # coding: utf-8
 
-# In[4]:
+# In[10]:
 
 import socket
 import sys
 
-if len(sys.argv) > 2:
-    print >>sys.stderr, "Usage: master-socket-cilent-send <message>"
+if len(sys.argv) >3:
+    print >>sys.stderr, "Usage: master-socket-cilent-send <message>\n master-socket-client-send -f <file path>"
     exit(-1)
+elif len(sys.argv) == 3:
+    script, parameter, messageFile = sys.argv
+    if parameter == '-f':
+        with open(messageFile) as msgfile:
+            messageTosend = msgfile.read().replace('\n', '')
+    else:
+        print >>sys.stderr, "Usage: master-socket-cilent-send <message>\n master-socket-client-send -f <file path>"
+        exit(-1)
 elif len(sys.argv) == 2:
     script, messageTosend = sys.argv
 else:
