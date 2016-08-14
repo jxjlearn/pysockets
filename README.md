@@ -16,19 +16,19 @@ python slave-socket-server.py
 ```
 master-socket-client-send,py: sends message to slave server
 ```
-python master-socket-client
+python master-socket-client-send.py
 ```
-.. send default message defined in the script
+.. sends default message defined in the script
 
 ```
 python master-socket-client-send.py <msg>
 ```
-.. send customized message
+.. sends customized message
 
 ```
 python master-socket-client-send.py -f <path2file/file>
 ```
-.. read message from file and send message 
+.. sends file content as the message 
 
 ## issues
 1. endMark = '$'. Assuming there's no'$' inside the message
