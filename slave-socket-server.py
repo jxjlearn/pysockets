@@ -15,7 +15,7 @@ server_address = ('localhost', 6666) #server address
 
 #mesage format definition
 #[x]xxxxxxxxxxxxxx[]
-endMark = '[]'
+endMark = '$'
 
 def msgMapping(msg):
 #message as input
@@ -65,6 +65,12 @@ def gitUpdate():
 #update github
     pass
 
+def changeReport(connection, msg):
+#msg[3:] is the content of report
+    print >>sys.stderr, 'The follwing is the change report:'
+    print >>sys.stderr, msg[3:]
+
+
 def msgEcho(connection, msg):
 #send the message back for testing
 #connected socket and message are inputs
@@ -73,8 +79,8 @@ def msgEcho(connection, msg):
 
 def noDefinition(connection, msg):
 #msg not defined; server will send the error message back to client
-    print >>sys.stderr, 'sending data back to the client'
-    connection.sendall('message not defined!')
+    print >>sys.stderr, 'wrong format. notify the client'
+    connection.sendall('Wrong format!' + endMark)
 
 
 
@@ -106,7 +112,7 @@ while True:
         msg = ''
 
         while True:
-            data = connection.recv(16)
+            data = connection.recv(128)
             print >>sys.stderr, "received '%s'" % data
             if not msgEnd:
                 if not msgStart:
@@ -119,7 +125,7 @@ while True:
                     msgEnd = True
                     print >>sys.stderr, 'end of message received from', client_address
                     print >>sys.stderr, 'notify the client that message received'
-                    connection.sendall('<got it>')
+                    connection.sendall('<got it>' + endMark)
                     break
 #                connection.sendall(data)
             else:
