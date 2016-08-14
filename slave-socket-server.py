@@ -2,16 +2,25 @@
 
 import socket
 import sys
+import subprocess
 
-#create an NET, STREAMing(TCP/IP) socket
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#tells the kernel to reuse a local socket in TIME_WAIT state
-#serversocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+#constants
+global gminHome, localRepo, kernelType
+gminHome = './gmin-quilt-representation/'   #path to gmin-quilt-representation
+localRepo = './test/'  #path to local repo
+remoteUrl = 'https://xjjiao@github.com/intel-otcak/test.git'  #URL for remote repo
+kernelType = 'cht-m1stable'
+server_address = ('localhost', 6666) #server address
 
-#mesage definition
+
+#mesage format definition
+#[x]xxxxxxxxxxxxxx[]
+endMark = '[]'
+
 def msgMapping(msg):
 #message as input
 #mapping messages to differnt functions
+#based on the fist 3 characters
     mapper = {
         '[s]': akquiltsync,
         '[r]': changeReport,
@@ -21,10 +30,31 @@ def msgMapping(msg):
 
 #function definitions
 def akquiltsync(msg):
+#message as input
+#string after [s] should be sha1
 #run akquiltsync with sha1 as input
 #then run step 3-5 of notes until change report generation
 #send request to master
-    pass
+    sha1 = msg[3:]
+    subprocess.check_call([gminHome + 'bin/akquiltsync', '-k', kernelType, sha1])
+
+    #clone the remote repo
+    subprocess.call(['git', 'clone', remoteUrl])
+
+    #After akquiltsync finishes, the repo is on a specific branch created by the script.
+    #Copy the patches to github repo.
+    subprocess.call(['rm', '-rf', localRepo + 'uefi/cht-m1stable/patches'])
+    subprocess.call(['cd', gminHome + 'uefi/cht-m1stable'])
+    subprocess.call(['find', 'patches', '|', 'cpio', '-pdmuv', localRepo + 'uefi/cht-m1stable'])
+
+    #Update technical debt report
+    subprocess.call(['cd', gminHome])
+    subprocess.call(['./bin/akgroup', '-c', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebtSummary.csv'])
+    subprocess.call(['./bin/akgroup', '-cv', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebt.csv'])
+
+    #Update change report
+
+
 
 def changeReport(msg):
 #changed content as input
@@ -48,10 +78,13 @@ def noDefinition(connection, msg):
 
 
 
+#create an NET, STREAMing(TCP/IP) socket
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#tells the kernel to reuse a local socket in TIME_WAIT state
+#serversocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
 
 #server address
-server_address = ('localhost', 6666)
 
 #bind the socket to a host and a port
 print >>sys.stderr, 'starting up on %s port %s' % server_address
@@ -71,7 +104,6 @@ while True:
         msgStart = False
         msgEnd = False
         msg = ''
-        endMark = '[]'
 
         while True:
             data = connection.recv(16)
