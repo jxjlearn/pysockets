@@ -4,7 +4,7 @@ Py scripts using sockets to establish the communication between master client an
 Message format:
 ```
 [x]xxxxxxxxxxx$
-'''
+```
 
 Function 'msgmapping' will map the message to different function based on the first 3 characters of message: [x]
 
