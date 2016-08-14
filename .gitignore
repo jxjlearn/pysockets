@@ -1,2 +1,6 @@
 .ipynb_checkpoints
 test.txt
+master-socket-client-send.ipynb
+master-socket-client.ipynb
+master-socket-client.py
+client-socket-server.ipynb
