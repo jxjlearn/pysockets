@@ -14,7 +14,7 @@ server_address = ('localhost', 6666) #server address
 
 
 #mesage format definition
-#[x]xxxxxxxxxxxxxx[]
+#[x]xxxxxxxxxxxxxx$
 endMark = '$'
 
 def msgMapping(msg):
@@ -115,31 +115,19 @@ while True:
         while True:
             data = connection.recv(128)
             print >>sys.stderr, "received '%s'" % data
-            if not msgEnd:
-                if not msgStart:
-                    msgStart = True
-                    func = msgMapping(data)
-                msg += data
-                if data.endswith(endMark):
-                    print msgEnd
-                    func(connection, msg)
-                    msgEnd = True
-                    print >>sys.stderr, 'end of message received from', client_address
-                    print >>sys.stderr, 'notify the client that message received'
-                    connection.sendall('<got it>' + endMark)
-                    break
-#                connection.sendall(data)
-            else:
-                print msg
-                print func
+            if not msgStart:
+                msgStart = True
+                func = msgMapping(data)
+            msg += data
+            if data.endswith(endMark):
                 func(connection, msg)
-                print >>sys.stderr, 'no more data from', client_address
+                print >>sys.stderr, 'no more data from ', client_address
+                print >>sys.stderr, 'notify the client that message received'
+                connection.sendall(endMark)
+                break
+            if data == '':
+                print >>sys.stderr, 'message without endMark, ignored!'
                 break
     finally:
         #clean up the connection
         connection.close()
-
-
-
-
-
