@@ -6,7 +6,7 @@ Message format:
 [x]xxxxxxxxxxx$
 ```
 
-Function 'msgmapping' will map the message to different function based on the first 3 characters of message: [x]
+.. Function 'msgmapping' will map the message to different function based on the first 3 characters of message: [x]
 
 Server script thinks the message is over when catches'$' at the end.
 ## usage
@@ -18,17 +18,17 @@ master-socket-client-send,py: sends message to slave server
 ```
 python master-socket-client
 ```
-..* sending default message defined in the script
+.. send default message defined in the script
 
 ```
 python master-socket-client-send.py <msg>
 ```
-..* sending <msg>
+.. send customized message
 
 ```
 python master-socket-client-send.py -f <path2file/file>
 ```
-..* sending message in the file 
+.. read message from file and send message 
 
 ## issues
 1. endMark = '$'. Assuming there's no'$' inside the message
