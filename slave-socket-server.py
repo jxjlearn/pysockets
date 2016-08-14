@@ -45,7 +45,8 @@ def akquiltsync(msg):
     #Copy the patches to github repo.
     subprocess.call(['rm', '-rf', localRepo + 'uefi/cht-m1stable/patches'])
     subprocess.call(['cd', gminHome + 'uefi/cht-m1stable'])
-    subprocess.call(['find', 'patches', '|', 'cpio', '-pdmuv', localRepo + 'uefi/cht-m1stable'])
+    res = subprocess.Popen(['find', 'patches'], stdout=subprocess.PIPE)
+    subprocess.check_call(['cpio', '-pdmuv', localRepo + 'uefi/cht-m1stable'], stdin=res.stdout)
 
     #Update technical debt report
     subprocess.call(['cd', gminHome])
