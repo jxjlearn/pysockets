@@ -47,6 +47,7 @@ try:
         amount_received += len(data)
         print >>sys.stderr, 'received "%s"' % data
         if data.endswith(endMark):
+            print >>sys.stderr, 'message received by the server'
             break
 
 finally:
