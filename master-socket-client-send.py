@@ -6,7 +6,7 @@
 import socket
 import sys
 
-endMark = '$'
+endMark = '[$]'
 
 if len(sys.argv) >3:
     print >>sys.stderr, "Usage: master-socket-cilent-send <message>\n master-socket-client-send -f <file path>"
@@ -43,7 +43,7 @@ try:
     amount_expected = len(messageTosend)
 
     while amount_received < amount_expected:
-        data = clientsocket.recv(128)
+        data = clientsocket.recv(1024)
         amount_received += len(data)
         print >>sys.stderr, 'received "%s"' % data
         if data.endswith(endMark):
