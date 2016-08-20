@@ -5,10 +5,10 @@ Message format:
 ```
 [x]xxxxxxxxxxx[$]
 ```
-.. [s]: Run akquiltsync, copy pathced to github repo, and update debt report
-.. [r]: Message with content of change report
-.. [t]: message echo for testing
-.. [$]: endMark
+>* [s]: Run akquiltsync, copy pathced to github repo, and update debt report
+>* [r]: Message with content of change report
+>* [t]: message echo for testing
+>* [$]: endMark
 
 Function 'msgmapping' will map the message to different function based on the first 3 characters of message: [x]
 
