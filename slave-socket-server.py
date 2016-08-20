@@ -30,12 +30,17 @@ def msgMapping(msg):
 
 #function definitions
 def akquiltsync(msg):
-#message as input
-#string after [s] should be sha1
-#run akquiltsync with sha1 as input
-#then run step 3-5 of notes until change report generation
-#send request to master
+    '''
+    #message as input
+    #string after [s] should be sha1
+    #check if  this sha has been synced
+    #run akquiltsync with sha1 as input
+    #then run step 3-5 of notes until change report generation
+    #send request to master
+    '''
     sha1 = msg[3:]
+
+    #check if sha has been pathced
     subprocess.check_call([gminHome + 'bin/akquiltsync', '-k', kernelType, sha1])
 
     #clone the remote repo
