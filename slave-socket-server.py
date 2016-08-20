@@ -15,7 +15,7 @@ server_address = ('localhost', 6666) #server address
 
 #mesage format definition
 #[x]xxxxxxxxxxxxxx$
-endMark = '$'
+endMark = '@#$'
 
 def msgMapping(msg):
 #message as input
@@ -113,7 +113,7 @@ while True:
         msg = ''
 
         while True:
-            data = connection.recv(128)
+            data = connection.recv(1024)
             print >>sys.stderr, "received '%s'" % data
             if not msgStart:
                 msgStart = True
