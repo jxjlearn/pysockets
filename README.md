@@ -3,7 +3,7 @@ Py scripts using sockets to establish the communication between master client an
 
 Message format:
 ```
-[x]xxxxxxxxxxx$
+[x]xxxxxxxxxxx[$]
 ```
 
 .. Function 'msgmapping' will map the message to different function based on the first 3 characters of message: [x]
@@ -31,4 +31,4 @@ python master-socket-client-send.py -f <path2file/file>
 .. sends file content as the message 
 
 ## issues
-1. endMark = '$'. Assuming there's no'$' inside the message
+1. endMark = '[$]'. Message will be process after all of it is recieved. It garantees the compleness of message received, but would cosume more space if the message is very long.
