@@ -23,7 +23,7 @@ print >>sys.stderr, '>>sha1:%s' % sha1
 #need to sync
 print >>sys.stderr, '>>akquitsync is running...'
 cmd = 'cd ' + gminHome + ' && ' + './bin/akquiltsync ' + '-k ' + kernelType + ' ' + sha1
-#subprocess.check_call(cmd, shell=True)
+subprocess.check_call(cmd, shell=True)
 #subprocess.check_call([gminHome + 'bin/akquiltsync', '-k', kernelType, sha1])
 
 #clone the remote repo
