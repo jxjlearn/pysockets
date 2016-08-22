@@ -119,18 +119,22 @@ while True:
 
         while True:
             msg += connection.recv(1024)
+            if msg == '':
+                print >>sys.stderr, 'client is closed!'
+                break
             if not msgStart:
                 msgStart = True
                 func = msgMapping(msg)
             if msg.endswith(endMark):
                 func(connection, msg)
                 print >>sys.stderr, "received '%s'" % msg
-                print >>sys.stderr, 'notify the client that message received'
-                connection.sendall(endMark)
-                break
-            if msg == '':
-                print >>sys.stderr, 'message without endMark, ignored!'
-                break
+                '''
+                #one message received. Client is still connected 
+                Go back to inital state to waiting for new message
+                '''
+                msg = ''
+                msgStart = False
+                print >>sys.stderr, 'still connected; waiting for new message'
     finally:
         #clean up the connection
         connection.close()
