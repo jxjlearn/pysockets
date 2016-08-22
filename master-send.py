@@ -1,4 +1,4 @@
-
+#!/usr/bin/python
 # coding: utf-8
 #interactive interface to send message to slave
 import socket
