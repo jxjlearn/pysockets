@@ -7,19 +7,22 @@ need to run it at ~
 #then run step 3-5 of notes until change report generation
 #send request to master
 '''
+import subprocess
 
 gminHome = '~/gmin-quilt-representation/'
 localRepo = '~/test/'
-remoteUrl = 'https://xjjiao@github.com/intel-otcak/test,git'
+remoteUrl = 'https://xjjiao@github.com/intel-otcak/test.git'
 kernelType = 'cht-m1stable'
 
 
 
-sha1 = 1234567890
+sha1 = '4200ebb7bb687dbfa1391ae6d615542fa8c741db'
 
 
 #need to sync
-subprocess.check_call([gminHome + 'bin/akquiltsync', '-k', kernelType, sha1])
+tmp = 'mkdir'
+subprocess.check_call([tmp, '~/tmp'])
+#subprocess.check_call([gminHome + 'bin/akquiltsync', '-k', kernelType, sha1])
 
 #clone the remote repo
 subprocess.call(['git', 'clone', remoteUrl])
@@ -34,4 +37,4 @@ subprocess.check_call(['cpio', '-pdmuv', localRepo + 'uefi/cht-m1stable'], stdin
 #Update technical debt report
 subprocess.call(['cd', gminHome])
 subprocess.call(['./bin/akgroup', '-c', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebtSummary.csv'])
-    subprocess.call(['./bin/akgroup', '-cv', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebt.csv'])
+subprocess.call(['./bin/akgroup', '-cv', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebt.csv'])
