@@ -8,8 +8,8 @@ need to run it at ~
 #send request to master
 '''
 
-gminHome = './gmin-quilt-representation/'
-localRepo = './test/'
+gminHome = '~/gmin-quilt-representation/'
+localRepo = '~/test/'
 remoteUrl = 'https://xjjiao@github.com/intel-otcak/test,git'
 kernelType = 'cht-m1stable'
 
@@ -35,5 +35,3 @@ subprocess.check_call(['cpio', '-pdmuv', localRepo + 'uefi/cht-m1stable'], stdin
 subprocess.call(['cd', gminHome])
 subprocess.call(['./bin/akgroup', '-c', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebtSummary.csv'])
     subprocess.call(['./bin/akgroup', '-cv', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebt.csv'])
-
-
