@@ -1,0 +1,41 @@
+#!/usr/bin/env groovy
+//interactive interface to send message to slave
+
+endMark = '[$]'
+
+//Connect the client to the server; make sure server is running
+server_address = ['localhost', 6666]
+//println 'connecting to %s port %s' % server_address
+s = new Socket(server_address)
+println "test\n"
+s << '[t]this is a test[$]'
+println "message sent"
+//s.flush()
+//def socket = new Socket('localhost',6666)
+
+//socket.withStreams { input, output ->
+//    println input.newReader().readLine()
+//    output << 'Imma socket'
+//}
+println "flush"
+s.close()
+//Send the message after the connection is established
+/*
+while(true) {
+    def messageRecv = ''
+    //accept the input from stdin
+    printiln 'waiting for new instruction'
+    //def messageTosend = system.console().readline ">: "
+    //Send data
+    println 'sending $messageTosend' + '/n'
+    socket.withStreams { input, output ->
+                         output << "echo-response($now): " + "\n"
+                         def reader = input.newReader()
+                         def buffer = reader.readLine()
+                         println "server received: $buffer"
+                         now = new Date()
+                       }
+}
+println 'closing client'
+s.close()
+*/
