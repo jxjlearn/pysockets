@@ -72,20 +72,20 @@ def akquiltsync(connection, msg):
     #Update technical debt report
     cmd = 'cd ' + gminHome
     print >>sys.stderr, '>>Generating TechnicalDebtSymmary.csv...'
-    subprocess.call(cmd + ' && ' + './bin/akgroup ' + '-c ' + '-d ' + /
-                    'uefi/cht-m1stable/patches ' + '> ' + localRepo + /
-                    'uefi/cht-m1stable/TechnicalDebtSummary.csv', /
+    subprocess.call(cmd + ' && ' + './bin/akgroup ' + '-c ' + '-d ' + \
+                    'uefi/cht-m1stable/patches ' + '> ' + localRepo + \
+                    'uefi/cht-m1stable/TechnicalDebtSummary.csv', \
                     shell=True)
     print >>sys.stderr, '>>Generating TechnicalDebt.csv...'
-    subprocess.call(cmd + ' && ' + './bin/akgroup ' + '-cv ' + '-d ' + /
-                    'uefi/cht-m1stable/patches ' + '> ' + localRepo + /
+    subprocess.call(cmd + ' && ' + './bin/akgroup ' + '-cv ' + '-d ' + \
+                    'uefi/cht-m1stable/patches ' + '> ' + localRepo + \
                     'uefi/cht-m1stable/TechnicalDebt.csv', shell=True)
 
     #get the difference between updated series and github one
     print >>sys.stderr, '>>saving the git diff into "git-diff.txt"...'
     with open('git-diff.txt', 'w') as diffFile :
-	subprocess.call('cd ' + localRepo + ' && ' + /
-                 'git diff uefi/cht-m1stable/patches/series', /
+	subprocess.call('cd ' + localRepo + ' && ' + \
+                 'git diff uefi/cht-m1stable/patches/series', \
                  shell=True, stdout=diffFile, stderr=diffFile)
 
     #Update change report
