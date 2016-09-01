@@ -15,8 +15,8 @@ server_address = ('localhost', 6666) #server address
 
 
 #mesage format definition
-#[x]xxxxxxxxxxxxxx[$]
-endMark = '[$]'
+#[x]xxxxxxxxxxxxxx\n
+endMark = '\n'
 
 def msgMapping(msg):
 #message as input

@@ -4,7 +4,7 @@
 import socket
 import sys
 
-endMark = '[$]'
+endMark = '\n'
 
 #Create a TCP/IP client
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
