@@ -30,7 +30,7 @@ def msgMapping(msg):
     return mapper.get(msg[:3], noDefinition)
 
 #function definitions
-def akquiltsync(msg):
+def akquiltsync(connection, msg):
     '''
     #message as input
     #string after [s] should be sha1
@@ -40,24 +40,53 @@ def akquiltsync(msg):
     #send request to master
     '''
     sha1 = msg[3:]
+    print >>sys.stderr, '>>sha1:%s' % sha1
+    
+    #check if sync required
+    if alreadySync :
+        return
+    #need to sync
+    connection.sendall('Sync reqired. Do you want to sync (y/n)')
 
-    #check if sha has been pathced
-    subprocess.check_call([gminHome + 'bin/akquiltsync', '-k', kernelType, sha1])
+    #start sync
+    print >>sys.stderr, '>>akquitsync is running...'
+    cmd = 'cd ' + gminHome + ' && ' + './bin/akquiltsync ' + \
+            '-k ' + kernelType + ' ' + sha1
+    subprocess.check_call(cmd, shell=True)
 
     #clone the remote repo
-    subprocess.call(['git', 'clone', remoteUrl])
-
-    #After akquiltsync finishes, the repo is on a specific branch created by the script.
+    print >>sys.stderr, '>>removing the local repo %s...' % localRepo
+    subprocess.call('rm -rf ' + localRepo, shell=True)
+    print >>sys.stderr, '>>cloning github repo...'
+    cmd = 'cd ~ ' + '&& ' + 'git clone ' + remoteUrl
+    subprocess.call(cmd, shell=True)
     #Copy the patches to github repo.
-    subprocess.call(['rm', '-rf', localRepo + 'uefi/cht-m1stable/patches'])
-    subprocess.call(['cd', gminHome + 'uefi/cht-m1stable'])
-    res = subprocess.Popen(['find', 'patches'], stdout=subprocess.PIPE)
-    subprocess.check_call(['cpio', '-pdmuv', localRepo + 'uefi/cht-m1stable'], stdin=res.stdout)
+    print >>sys.stderr, '>>updating the patches in github local copy...'
+    cmd = 'rm' + ' -rf ' + localRepo + 'uefi/cht-m1stable/patches'
+    subprocess.call(cmd, shell=True)
+
+    cmd1 = 'cd ' + gminHome + 'uefi/cht-m1stable '
+    cmd2 = 'find patches | cpio -pdmu ' + localRepo + 'uefi/cht-m1stable'
+    subprocess.call(cmd1 + '&& ' + cmd2, shell=True)
 
     #Update technical debt report
-    subprocess.call(['cd', gminHome])
-    subprocess.call(['./bin/akgroup', '-c', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebtSummary.csv'])
-    subprocess.call(['./bin/akgroup', '-cv', '-d', 'uefi/cht-m1stable/patches', '>', localrepo + 'uefi/cht-m1stable/TechnicalDebt.csv'])
+    cmd = 'cd ' + gminHome
+    print >>sys.stderr, '>>Generating TechnicalDebtSymmary.csv...'
+    subprocess.call(cmd + ' && ' + './bin/akgroup ' + '-c ' + '-d ' + /
+                    'uefi/cht-m1stable/patches ' + '> ' + localRepo + /
+                    'uefi/cht-m1stable/TechnicalDebtSummary.csv', /
+                    shell=True)
+    print >>sys.stderr, '>>Generating TechnicalDebt.csv...'
+    subprocess.call(cmd + ' && ' + './bin/akgroup ' + '-cv ' + '-d ' + /
+                    'uefi/cht-m1stable/patches ' + '> ' + localRepo + /
+                    'uefi/cht-m1stable/TechnicalDebt.csv', shell=True)
+
+    #get the difference between updated series and github one
+    print >>sys.stderr, '>>saving the git diff into "git-diff.txt"...'
+    with open('git-diff.txt', 'w') as diffFile :
+	subprocess.call('cd ' + localRepo + ' && ' + /
+                 'git diff uefi/cht-m1stable/patches/series', /
+                 shell=True, stdout=diffFile, stderr=diffFile)
 
     #Update change report
 
