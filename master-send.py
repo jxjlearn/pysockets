@@ -30,6 +30,8 @@ try:
             if messageRecv.endswith(endMark):
                 print >>sys.stderr, 'received: "%s"' % messageRecv
                 break
+        if messageRecv == 'Done!' + endMark:
+            break
 
 finally:
     print >>sys.stderr, 'closing client'

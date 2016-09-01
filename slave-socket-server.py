@@ -119,7 +119,6 @@ def noDefinition(connection, msg):
     connection.sendall('Wrong format!' + endMark)
 
 
-
 #create an NET, STREAMing(TCP/IP) socket
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #tells the kernel to reuse a local socket in TIME_WAIT state
@@ -147,9 +146,12 @@ while True:
         msg = ''
 
         while True:
-            msg += connection.recv(1024)
-            if msg == '':
-                print >>sys.stderr, 'client is closed!'
+            msg += connection.recv(2048)
+            print 'still have data'
+            #everything is done; send message to client and close the connection
+            if msg == '[d]' + endMark:
+                print >>sys.stderr, 'Everything is done!'
+                connection.sendall('Done!' + endMark)
                 break
             if not msgStart:
                 msgStart = True
@@ -161,6 +163,7 @@ while True:
                 #one message received. Client is still connected 
                 Go back to inital state to waiting for new message
                 '''
+                #msg += connection.recv(1024)  #discard everything after endMark
                 msg = ''
                 msgStart = False
                 print >>sys.stderr, 'still connected; waiting for new message'
