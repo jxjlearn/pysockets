@@ -2,6 +2,7 @@ import java.net.ServerSocket
 def server = new ServerSocket(6666)
  
 while(true) {
+    println "waiting for new message"
     server.accept { socket ->
         println "processing new connection..."
         socket.withStreams { input, output ->

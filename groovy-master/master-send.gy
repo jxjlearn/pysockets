@@ -22,7 +22,7 @@ println "flush"
 s.close()*/
 //Send the message after the connection is established
 
-socket = new Socket('localhost',6666)
+socket = new Socket('localhost',7777)
 while(true) {
     def messageRecv = ''
     //accept the input from stdin
@@ -30,15 +30,15 @@ while(true) {
     def messageTosend = System.console().readLine ">: "
     //Send data
     println "sending $messageTosend ..." 
-    //socket << messageTosend + endMark
-    //socket >> messageRecv
-    socket.withStreams { input, output ->
-                         output << messageTosend + endMark
+    socket << messageTosend + endMark
+    //messageRecv << socket
+    /*socket.withStreams { input, output ->
+                         //output << messageTosend + endMark
                          println "waiting for server response ..."
                          def buffer = input.newReader().readLine()
                          messageRecv = buffer
                          println "server received: $messageRecv"
-                      }
+                       }*/
     if (messageRecv == "Done!") {
        break
     }
