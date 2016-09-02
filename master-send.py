@@ -26,7 +26,7 @@ try:
         clientsocket.sendall(messageTosend)
         #Look for the response
         while True :
-            messageRecv += clientsocket.recv(1024)
+            messageRecv += clientsocket.recv(4096)
             if messageRecv.endswith(endMark):
                 print >>sys.stderr, 'received: "%s"' % messageRecv
                 break
