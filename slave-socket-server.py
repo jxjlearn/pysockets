@@ -11,7 +11,7 @@ gminHome = './gmin-quilt-representation/'   #path to gmin-quilt-representation
 localRepo = './test/'  #path to local repo
 remoteUrl = 'https://xjjiao@github.com/intel-otcak/test.git'  #URL for remote repo
 kernelType = 'cht-m1stable'
-server_address = ('localhost', 7777) #server address
+server_address = ('localhost', 6666) #server address
 
 
 #mesage format definition
@@ -147,7 +147,7 @@ while True:
 
         while True:
             msg += connection.recv(4096)
-            print 'still have data'
+            #print 'still have data'
             #everything is done; send message to client and close the connection
             if msg == '[d]' + endMark:
                 print >>sys.stderr, 'Everything is done!'
