@@ -1,47 +1,33 @@
 #!/usr/bin/env groovy
 //interactive interface to send message to slave
-
+/**
+socket.withStreams will automatically close the connection after closures, so need to put while (true) loop inside the closures/
+**/
 endMark = '\n'
 
 //Connect the client to the server; make sure server is running
-//server_address = ('localhost', 6666)
-//println server_address.getClass()
-/*println 'connecting to the slave'
-s = new Socket(server_address)
-//println "test\n"
-s << '[t]this is a test[$]'
-println "message sent"
-//s.flush()
-//def socket = new Socket('localhost',6666)
+socket = new Socket('localhost',6666)
+def messageRecv = ""
+def messageTosend = ""
 
-//socket.withStreams { input, output ->
-//    println input.newReader().readLine()
-//    output << 'Imma socket'
-//}
-println "flush"
-s.close()*/
-//Send the message after the connection is established
-
-socket = new Socket('localhost',7777)
-while(true) {
-    def messageRecv = ''
-    //accept the input from stdin
-    println 'waiting for new instruction'
-    def messageTosend = System.console().readLine ">: "
-    //Send data
-    println "sending $messageTosend ..." 
-    socket << messageTosend + endMark
-    //messageRecv << socket
-    /*socket.withStreams { input, output ->
-                         //output << messageTosend + endMark
-                         println "waiting for server response ..."
-                         def buffer = input.newReader().readLine()
-                         messageRecv = buffer
-                         println "server received: $messageRecv"
-                       }*/
-    if (messageRecv == "Done!") {
-       break
-    }
+socket.withStreams { input, output ->
+    while (true) {
+        messageRecv = ''
+        //accept the input from stdin
+        println 'waiting for new instruction'
+        messageTosend = System.console().readLine ">: "
+        //Send data
+        println "sending $messageTosend ..." 
+        output << messageTosend + endMark
+        output.flush()
+        println "waiting for server response ..."
+        messageRecv = input.newReader().readLine()
+        println "received: $messageRecv"
+        if (messageRecv == "Done!") {
+            break
+        }
+     }
 }
+   
 println 'closing client'
 socket.close()
