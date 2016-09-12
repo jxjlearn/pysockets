@@ -9,8 +9,13 @@ endMark = '\n'
 socket = new Socket('localhost',6666)
 def messageRecv = ""
 def messageTosend = ""
-
-socket.withStreams { input, output ->
+messageTosend = "Hello"
+socket << messageTosend + endMark
+println "sending $messageTosend ..." 
+input = new DataInputStream(socket.getInputStream())
+messageRecv = input.newReader().readLine()
+println "revieving $messageRecv ..." 
+/*socket.withStreams { input, output ->
     while (true) {
         messageRecv = ''
         //accept the input from stdin
@@ -27,7 +32,7 @@ socket.withStreams { input, output ->
             break
         }
      }
-}
+}*/
    
 println 'closing client'
 socket.close()
