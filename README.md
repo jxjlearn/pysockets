@@ -3,13 +3,17 @@ Python and groovy scripts using sockets to establish the communication between m
 
 Message format:
 ```
-[x]xxxxxxxxxxx\n
+[x]xxxxxxxxxxx[EOM]
 ```
 * [s]: Run akquiltsync, copy patched to github repo, and update debt report.
 * [r]: Message with content of change report
 * [t]: Message echo for testing
 * [d]: Everthing is done. After receiving this message, the slave server will send a "Done" message to master client and close the connection. Server will be still running and waiting for new connection. Master client will be closed after receiving this message.
-* \n: endMark, the special string marks the end of the message.
+* [EOM]: endMark, the special string marks the end of the message.
+
+Please note that the message sent to master client having '\n' automatically added. This is to match the readline method in groovy client, however it breaks the python client. 
+
+If groovy master client receives message without endmark, it will keep receiving the message until catching the endmark. This can be used to receive and print the status messages sent by slave master.
 
 Function 'msgmapping' will map the message to different function based on the first 3 characters of message: [x]
 
