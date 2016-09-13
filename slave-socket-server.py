@@ -16,7 +16,7 @@ server_address = ('localhost', 6666) #server address
 
 #mesage format definition
 #[x]xxxxxxxxxxxxxx\n
-endMark = '\n'
+endMark = '[EOM]'
 
 def msgMapping(msg):
 #message as input
@@ -111,12 +111,12 @@ def msgEcho(connection, msg):
 #send the message back for testing
 #connected socket and message are inputs
     print >>sys.stderr, 'echo back to the client'
-    connection.sendall(msg[3:])
+    connection.sendall(msg[3:] + '\n')
 
 def noDefinition(connection, msg):
 #msg not defined; server will send the error message back to client
     print >>sys.stderr, 'wrong format. notify the client'
-    connection.sendall('Wrong format!' + endMark)
+    connection.sendall('Wrong format!' + endMark + '\n')
 
 
 #create an NET, STREAMing(TCP/IP) socket
@@ -151,7 +151,7 @@ while True:
             #everything is done; send message to client and close the connection
             if msg == '[d]' + endMark:
                 print >>sys.stderr, 'Everything is done!'
-                connection.sendall('Done!' + endMark)
+                connection.sendall('Done!' + endMark + '\n')
                 break
             if not msgStart:
                 msgStart = True
