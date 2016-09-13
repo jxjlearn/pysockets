@@ -3,18 +3,36 @@
 /**
 socket.withStreams will automatically close the connection after closures, so need to put while (true) loop inside the closures/
 **/
-endMark = '\n'
+endMark = "[EOM]"
 
 //Connect the client to the server; make sure server is running
 socket = new Socket('localhost',6666)
+//input channel
+input = new DataInputStream(socket.getInputStream())
 def messageRecv = ""
 def messageTosend = ""
-messageTosend = "Hello"
-socket << messageTosend + endMark
-println "sending $messageTosend ..." 
-input = new DataInputStream(socket.getInputStream())
-messageRecv = input.newReader().readLine()
-println "revieving $messageRecv ..." 
+//messageTosend = "Hello"
+
+while (true) {
+    println 'waiting for new instruction'
+    messageTosend = System.console().readLine ">: "
+    //send message
+    println "sending $messageTosend ..." 
+    socket << messageTosend + endMark
+    //receive response
+    while (true) {
+        messageRecv = input.newReader().readLine()
+        println "revieving $messageRecv ..."
+        if (messageRecv.endsWith(endMark)) {
+            break
+        }
+    }
+    if (messageRecv == 'Done!' + endMark) {
+        break
+    } 
+}
+
+
 /*socket.withStreams { input, output ->
     while (true) {
         messageRecv = ''
