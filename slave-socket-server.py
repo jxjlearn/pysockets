@@ -4,6 +4,7 @@
 import socket
 import sys
 import subprocess
+import time
 
 #constants
 global gminHome, localRepo, kernelType
@@ -111,6 +112,10 @@ def msgEcho(connection, msg):
 #send the message back for testing
 #connected socket and message are inputs
     print >>sys.stderr, 'echo back to the client'
+    connection.sendall('Please wait for 5 seconds\n')
+    time.sleep(5)
+    connection.sendall('Another 5 seconds\n')
+    time.sleep(5)
     connection.sendall(msg[3:] + '\n')
 
 def noDefinition(connection, msg):
