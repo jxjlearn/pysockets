@@ -1,0 +1,70 @@
+#!/usr/bin/env groovy
+//interactive interface to send message to slave
+/**
+socket.withStreams will automatically close the connection after closures, so need to put while (true) loop inside the closures/
+**/
+endMark = "[EOM]"
+
+
+
+
+
+
+
+//messageTosend = "Hello"
+
+while (true) {
+    println 'waiting for new instruction'
+    socket = new Socket('localhost', 6666)
+  
+    def endMark = '\n'
+    def messageRecv = ""
+    def messageTosend = ""
+    messageTosend = "hello"
+    socket <<  messageTosend + endMark
+    println "sending $messageTosend ..."
+    input = new DataInputStream(socket.getInputStream())
+    messageRecv = input.newReader().readLine()
+    println "receiving $messageRecv .."
+    println "closing client"
+    socket.close()
+    socket = null
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+println 'closing client'
+socket.close()
